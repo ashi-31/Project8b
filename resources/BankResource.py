@@ -16,9 +16,14 @@ patch_parser.add_argument('name', type=str, default=False)
 headers = {'Content-Type': 'application/json'}
 
 class BankResource(Resource):
-    def get(self, investor_id=None, bank_id=None):
-       response = get_bank_by_Inv(investor_id, bank_id)
-       return make_response(response.to_json(), 200, headers)
+    def get(self, investor_id=None, startup_id=None, bank_id=None):
+        if startup_id==None:
+            response = get_bank_by_Inv(investor_id,bank_id)
+            return make_response(response.to_json(), 200, headers)
+        if investor_id==None:
+            response = get_bank_by_str(startup_id,bank_id)
+            return make_response(response.to_json(), 200, headers)
+
 
     def delete(self,investor_id=None,bank_id=None):
         if investor_id is not None and bank_id is not None:
@@ -26,15 +31,22 @@ class BankResource(Resource):
             return make_response(response.to_json(), 200, headers)
         return 400
 
-    def post(self,investor_id):
-        bank = get_bank_by_Inv(investor_id)
-        args = post_parser.parse_args()
-        response = create_bank_by_inv(investor_id,args.num,args.name, args.r_num, args.check_save, args.zip)
-        return make_response(response.to_json(), 200, headers)
+    def post(self,investor_id=None, startup_id=None):
+       if startup_id==None:
+           args = post_parser.parse_args()
+           response = create_bank_by_inv(investor_id,args.num, args.name, args.r_num, args.check_save, args.zip)
+           return make_response(response.to_json(), 200, headers)
+       if investor_id==None:
+           args = post_parser.parse_args()
+           response = create_bank_by_str(startup_id,args.num, args.name, args.r_num, args.check_save, args.zip)
+           return make_response(response.to_json(), 200, headers)
 
-    def patch(self, investor_id=None, bank_id=None):
+    def patch(self, investor_id=None, startup_id=None, bank_id=None):
         if investor_id is not None and bank_id is not None:
              args = patch_parser.parse_args()
              response = patch_bank_by_Inv(investor_id,bank_id,args.name)
+        if startup_id is not None and bank_id is not None:
+             args = patch_parser.parse_args()
+             response = patch_bank_by_str(startup_id,bank_id,args.name)
         return make_response(response.to_json(), 200, headers)
         return 400

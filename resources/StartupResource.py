@@ -14,7 +14,7 @@ patch_parser.add_argument('email', type=str)
 headers = {'Content-Type': 'application/json'}
 
 
-class RiderResource(Resource):
+class StartupResource(Resource):
     def get(self, startup_id=None):
         response = get_startup(startup_id)
         return make_response(response.to_json(), 200, headers)
