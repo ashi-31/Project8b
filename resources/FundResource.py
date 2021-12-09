@@ -1,6 +1,7 @@
 from flask_restful import reqparse, Resource
 from flask import make_response
 from services.FundService import *
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 
 post_parser = reqparse.RequestParser()
@@ -11,6 +12,7 @@ post_parser.add_argument('investor_name', type=str)
 headers = {'Content-Type': 'application/json'}
 
 class FundResource(Resource):
+    @jwt_required()
     def get(self, investor_id=None, fund_id=None):
         if investor_id is not None and fund_id is None:
             args = reqparse.request.args
@@ -23,12 +25,14 @@ class FundResource(Resource):
             transaction = get_fund_by_Inv(fund_id)
         return make_response(transaction.to_json(), 200, headers)
 
+    @jwt_required()
     def delete(self,investor_id=None,fund_id=None):
         if investor_id is not None and fund_id is not None:
             response = delete_fund_by_inv(investor_id,fund_id)
             return make_response(response.to_json(), 200, headers)
         return 400
 
+    @jwt_required()
     def post(self,investor_id):
         fund = get_fund_by_Inv(investor_id)
         args = post_parser.parse_args()

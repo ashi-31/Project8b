@@ -34,6 +34,7 @@ class EventResource(Resource):
             event= get_event(event_id)
         return make_response(event.to_json(), 200, headers)
 
+
     def delete(self, investor_id=None, event_id=None):
         if investor_id is not None and event_id is not None:
             response = delete_event_by_inv(investor_id, event_id)

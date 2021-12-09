@@ -1,6 +1,7 @@
 from flask_restful import reqparse, Resource
 from flask import make_response   # returns an HTML response
 from services.TransactionService import *
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 
 post_parser = reqparse.RequestParser()
@@ -19,6 +20,7 @@ headers = {'Content-Type': 'application/json'}
 
 
 class TransactionResource(Resource):
+    @jwt_required()
     def get(self, transaction_id=None):
         if transaction_id is None:
             args = reqparse.request.args
@@ -31,17 +33,20 @@ class TransactionResource(Resource):
             transaction = get_transaction(transaction_id)
         return make_response(transaction.to_json(), 200, headers)
 
+    @jwt_required()
     def delete(self, transaction_id=None):
         if transaction_id is not None:
             response = delete_transaction(transaction_id)
             return make_response(response.to_json(), 200, headers)
         return 400
 
+    @jwt_required()
     def post(self):
         args = post_parser.parse_args()
         response = create_transaction(args.number,args.amount, args.date_initiated, args.date_received, args.investor, args.startup, args.status)
         return make_response(response.to_json(), 200, headers)
 
+    @jwt_required()
     def patch(self, transaction_id=None):
         if transaction_id is not None:
             args = patch_parser.parse_args()

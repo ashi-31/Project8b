@@ -1,6 +1,7 @@
 from flask_restful import reqparse, Resource
 from flask import make_response   # returns an HTML response
 from services.InvestorService import *
+from flask_jwt_extended import jwt_required, get_jwt_identity
 import json
 
 post_parser = reqparse.RequestParser()
@@ -15,6 +16,7 @@ headers = {'Content-Type': 'application/json'}
 
 
 class InvestorResource(Resource):
+    @jwt_required()
     def get(self, investor_id=None):
         if investor_id is None:
             args = reqparse.request.args
@@ -28,17 +30,20 @@ class InvestorResource(Resource):
             investor = get_investor(investor_id)
         return make_response(investor.to_json(), 200, headers)
 
+    @jwt_required()
     def delete(self, investor_id=None):
         if investor_id is not None:
             response = delete_investor(investor_id)
             return make_response(response.to_json(), 200, headers)
         return 400
 
+    @jwt_required()
     def post(self):
         args = post_parser.parse_args()
         response = create_investor(args.first_name,args.last_name, args.email)
         return make_response(response.to_json(), 200, headers)
 
+    @jwt_required()
     def patch(self, investor_id=None):
         if investor_id is not None:
             args = patch_parser.parse_args()
