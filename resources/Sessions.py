@@ -22,6 +22,6 @@ class Sessions(Resource):
         if found_user:
             password_hash = get_hash(args.password.encode('utf-8'))
             if password_hash == found_user.password_hash:
-                access_token = create_access_token(identity=args.email, expires_delta=timedelta(seconds=30))
+                access_token = create_access_token(identity=args.email, expires_delta=timedelta(seconds=900))
                 return make_response(jsonify(access_token=access_token), 200)
         abort(401, "Invalid credentials")

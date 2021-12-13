@@ -64,5 +64,4 @@ def create_event_by_str(startup_id:str, event_name: str, event_host_name: str, e
 def delete_event_by_inv(investor_id: str, event_id:str):
     event_doc = Event.objects(investor_id=investor_id, event_id=event_id).first()
     event_doc.delete()
-    sample_response = "Delete successful!"
-    return sample_response
+    return event_doc

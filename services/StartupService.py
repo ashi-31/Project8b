@@ -15,8 +15,7 @@ def create_startup(startup_ein: str, startup_name: str, startup_email: str):  # 
 def delete_startup(startup_id: str):
     startup_doc = Startup.objects(id=startup_id).first()
     startup_doc.delete()
-    sample_response = "Delete successful!"
-    return sample_response
+    return startup_doc
 
 def update_startup(startup_id: str, startup_email: str):  # Service for the PATCH() method
     startup_doc = Startup.objects(id=startup_id).first()  # extracting the first object from a list of one object

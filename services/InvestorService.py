@@ -1,4 +1,5 @@
 from models.Investor import Investor
+import json
 
 def get_investor(investor_id: str):  # Service for the GET() method
     if investor_id is None:
@@ -20,8 +21,7 @@ def create_investor(inv_fname: str, inv_lname: str, inv_email: str):  # Service 
 def delete_investor(investor_id: str):
     investor_doc = Investor.objects(id=investor_id).first()
     investor_doc.delete()
-    sample_response = "Delete successful!"
-    return sample_response
+    return investor_doc
 
 def update_investor(investor_id: str, inv_email: str):  # Service for the PATCH() method
     investor_doc = Investor.objects(id=investor_id).first()  # extracting the first object from a list of one object
